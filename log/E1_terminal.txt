@@ -1,0 +1,55 @@
+samcode@samcode:~/network_layer$ sudo bash network_lab.sh up
+READY: iot-sensor <-> iot-router <-> iot-cloud
+samcode@samcode:~/network_layer$ sudo ip netns list
+iot-cloud
+iot-router
+iot-sensor
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor -br addr
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+s0@if2           UP             10.10.1.2/24 2001:db8:1::2/64 fe80::7420:9eff:fe81:b3af/64
+samcode@samcode:~/network_layer$ sudo ip -n iot-router -br addr
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+r0@if2           UP             10.10.1.1/24 2001:db8:1::1/64 fe80::7468:48ff:fe43:f7cd/64
+r1@if2           UP             10.10.2.1/24 2001:db8:2::1/64 fe80::5caf:5dff:fefb:1398/64
+samcode@samcode:~/network_layer$ sudo ip -n iot-cloud -br addr
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+c0@if3           UP             10.10.2.2/24 2001:db8:2::2/64 fe80::d4df:f1ff:fe65:7ea7/64
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor route
+10.10.1.0/24 dev s0 proto kernel scope link src 10.10.1.2
+10.10.2.0/24 via 10.10.1.1 dev s0
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor -6 route
+2001:db8:1::/64 dev s0 proto kernel metric 256 pref medium
+2001:db8:2::/64 via 2001:db8:1::1 dev s0 metric 1024 pref medium
+fe80::/64 dev s0 proto kernel metric 256 pref medium
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -c 3 10.10.1.1
+PING 10.10.1.1 (10.10.1.1) 56(84) bytes of data.
+64 bytes from 10.10.1.1: icmp_seq=1 ttl=64 time=0.049 ms
+64 bytes from 10.10.1.1: icmp_seq=2 ttl=64 time=0.084 ms
+64 bytes from 10.10.1.1: icmp_seq=3 ttl=64 time=0.044 ms
+
+--- 10.10.1.1 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2071ms
+rtt min/avg/max/mdev = 0.044/0.059/0.084/0.017 ms
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -c 3 10.10.2.2
+PING 10.10.2.2 (10.10.2.2) 56(84) bytes of data.
+64 bytes from 10.10.2.2: icmp_seq=1 ttl=63 time=0.048 ms
+64 bytes from 10.10.2.2: icmp_seq=2 ttl=63 time=0.047 ms
+64 bytes from 10.10.2.2: icmp_seq=3 ttl=63 time=0.034 ms
+
+--- 10.10.2.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2072ms
+rtt min/avg/max/mdev = 0.034/0.043/0.048/0.006 ms
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -6 -c 3 2001:db8:2::2
+PING 2001:db8:2::2 (2001:db8:2::2) 56 data bytes
+64 bytes from 2001:db8:2::2: icmp_seq=1 ttl=63 time=0.060 ms
+64 bytes from 2001:db8:2::2: icmp_seq=2 ttl=63 time=0.067 ms
+64 bytes from 2001:db8:2::2: icmp_seq=3 ttl=63 time=0.064 ms
+
+--- 2001:db8:2::2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2079ms
+rtt min/avg/max/mdev = 0.060/0.063/0.067/0.003 ms
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor route get 10.10.2.2
+10.10.2.2 via 10.10.1.1 dev s0 src 10.10.1.2 uid 0
+    cache
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor -6 route get 2001:db8:2::2
+2001:db8:2::2 from :: via 2001:db8:1::1 dev s0 src 2001:db8:1::2 metric 1024 pref medium

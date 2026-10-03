@@ -1,0 +1,28 @@
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor tcpdump -i s0 -nn -vv icmp6
+tcpdump: listening on s0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+^C13:14:55.940237 IP6 (flowlabel 0x02c1c, hlim 64, next-header ICMPv6 (58) payload length: 1408) 2001:db8:1::2 > 2001:db8:2::2: [icmp6 sum ok] ICMP6, echo request, id 3566, seq 1
+13:14:55.940264 IP6 (flowlabel 0x47867, hlim 64, next-header ICMPv6 (58) payload length: 1240) 2001:db8:1::1 > 2001:db8:1::2: [icmp6 sum ok] ICMP6, packet too big, mtu 1280
+13:15:00.643971 IP6 (flowlabel 0x02c1c, hlim 64, next-header ICMPv6 (58) payload length: 1240) 2001:db8:1::2 > 2001:db8:2::2: [icmp6 sum ok] ICMP6, echo request, id 3569, seq 1
+13:15:00.644001 IP6 (flowlabel 0x24c71, hlim 63, next-header ICMPv6 (58) payload length: 1240) 2001:db8:2::2 > 2001:db8:1::2: [icmp6 sum ok] ICMP6, echo reply, id 3569, seq 1
+13:15:01.416328 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 32) fe80::7420:9eff:fe81:b3af > 2001:db8:1::1: [icmp6 sum ok] ICMP6, neighbor solicitation, length 32, who has 2001:db8:1::1
+          source link-address option (1), length 8 (1): 76:20:9e:81:b3:af
+            0x0000:  7620 9e81 b3af
+13:15:01.416318 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 32) fe80::7468:48ff:fe43:f7cd > 2001:db8:1::2: [icmp6 sum ok] ICMP6, neighbor solicitation, length 32, who has 2001:db8:1::2
+          source link-address option (1), length 8 (1): 76:68:48:43:f7:cd
+            0x0000:  7668 4843 f7cd
+13:15:01.416399 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 24) 2001:db8:1::2 > fe80::7468:48ff:fe43:f7cd: [icmp6 sum ok] ICMP6, neighbor advertisement, length 24, tgt is 2001:db8:1::2, Flags [solicited]
+13:15:01.416407 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 24) 2001:db8:1::1 > fe80::7420:9eff:fe81:b3af: [icmp6 sum ok] ICMP6, neighbor advertisement, length 24, tgt is 2001:db8:1::1, Flags [router, solicited]
+13:15:01.672289 IP6 (flowlabel 0x02c1c, hlim 64, next-header ICMPv6 (58) payload length: 1240) 2001:db8:1::2 > 2001:db8:2::2: [icmp6 sum ok] ICMP6, echo request, id 3569, seq 2
+13:15:01.672315 IP6 (flowlabel 0x24c71, hlim 63, next-header ICMPv6 (58) payload length: 1240) 2001:db8:2::2 > 2001:db8:1::2: [icmp6 sum ok] ICMP6, echo reply, id 3569, seq 2
+13:15:06.536433 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 32) fe80::7420:9eff:fe81:b3af > fe80::7468:48ff:fe43:f7cd: [icmp6 sum ok] ICMP6, neighbor solicitation, length 32, who has fe80::7468:48ff:fe43:f7cd
+          source link-address option (1), length 8 (1): 76:20:9e:81:b3:af
+            0x0000:  7620 9e81 b3af
+13:15:06.536473 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 32) fe80::7468:48ff:fe43:f7cd > fe80::7420:9eff:fe81:b3af: [icmp6 sum ok] ICMP6, neighbor solicitation, length 32, who has fe80::7420:9eff:fe81:b3af
+          source link-address option (1), length 8 (1): 76:68:48:43:f7:cd
+            0x0000:  7668 4843 f7cd
+13:15:06.536493 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 24) fe80::7420:9eff:fe81:b3af > fe80::7468:48ff:fe43:f7cd: [icmp6 sum ok] ICMP6, neighbor advertisement, length 24, tgt is fe80::7420:9eff:fe81:b3af, Flags [solicited]
+13:15:06.536507 IP6 (hlim 255, next-header ICMPv6 (58) payload length: 24) fe80::7468:48ff:fe43:f7cd > fe80::7420:9eff:fe81:b3af: [icmp6 sum ok] ICMP6, neighbor advertisement, length 24, tgt is fe80::7468:48ff:fe43:f7cd, Flags [router, solicited]
+
+14 packets captured
+14 packets received by filter
+0 packets dropped by kernel

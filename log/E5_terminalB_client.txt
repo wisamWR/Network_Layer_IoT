@@ -1,0 +1,20 @@
+samcode@samcode:~/network_layer$ sudo ip -n iot-router link set r1 mtu 1500
+samcode@samcode:~/network_layer$ sudo ip -n iot-cloud link set c0 mtu 1500
+samcode@samcode:~/network_layer$ sudo ip -n iot-router link show r1
+3: r1@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 5e:af:5d:fb:13:98 brd ff:ff:ff:ff:ff:ff link-netns iot-cloud
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor route flush cache
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor python3 - <<'PY'
+> import socket
+with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as s:
+    s.settimeout(3)
+    s.connect(("2001:db8:2::2", 8000))
+    s.sendall(b"GET / HTTP/1.0\r\nHost: iot-cloud\r\n\r\n")
+    print(s.recv(4096).decode(errors="replace"))
+PY
+HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/3.12.3
+Date: Sat, 03 Oct 2026 06:25:33 GMT
+Content-type: text/html; charset=utf-8
+Content-Length: 240
+

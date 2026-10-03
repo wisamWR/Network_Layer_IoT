@@ -1,0 +1,28 @@
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor neigh flush dev s0
+[sudo] password for samcode:
+Sorry, try again.
+[sudo] password for samcode:
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor -6 neigh flush dev s0
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -c 2 10.10.2.2
+PING 10.10.2.2 (10.10.2.2) 56(84) bytes of data.
+64 bytes from 10.10.2.2: icmp_seq=1 ttl=63 time=0.060 ms
+64 bytes from 10.10.2.2: icmp_seq=2 ttl=63 time=0.054 ms
+
+--- 10.10.2.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1033ms
+rtt min/avg/max/mdev = 0.054/0.057/0.060/0.003 ms
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -6 -c 2 2001:db8:2::2
+PING 2001:db8:2::2 (2001:db8:2::2) 56 data bytes
+64 bytes from 2001:db8:2::2: icmp_seq=1 ttl=63 time=0.037 ms
+64 bytes from 2001:db8:2::2: icmp_seq=2 ttl=63 time=0.061 ms
+
+--- 2001:db8:2::2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1024ms
+rtt min/avg/max/mdev = 0.037/0.049/0.061/0.012 ms
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor neigh show
+10.10.1.1 dev s0 lladdr 76:68:48:43:f7:cd REACHABLE
+2001:db8:1::1 dev s0 lladdr 76:68:48:43:f7:cd router REACHABLE
+fe80::7468:48ff:fe43:f7cd dev s0 lladdr 76:68:48:43:f7:cd DELAY
+samcode@samcode:~/network_layer$ sudo ip -n iot-sensor -6 neigh show
+2001:db8:1::1 dev s0 lladdr 76:68:48:43:f7:cd router REACHABLE
+fe80::7468:48ff:fe43:f7cd dev s0 lladdr 76:68:48:43:f7:cd router REACHABLE

@@ -1,0 +1,5 @@
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-cloud python3 -m http.server 8000 --bind 2001:db8:2::2
+Serving HTTP on 2001:db8:2::2 port 8000 (http://[2001:db8:2::2]:8000/) ...
+2001:db8:1::2 - - [03/Oct/2026 13:25:33] "GET / HTTP/1.0" 200 -
+^C
+Keyboard interrupt received, exiting.

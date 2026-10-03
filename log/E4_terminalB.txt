@@ -1,0 +1,37 @@
+samcode@samcode:~/network_layer$ sudo ip -n iot-router link set r1 mtu 1280
+samcode@samcode:~/network_layer$ sudo ip -n iot-cloud link set c0 mtu 1280
+samcode@samcode:~/network_layer$ sudo ip -n iot-router link show r1
+3: r1@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1280 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 5e:af:5d:fb:13:98 brd ff:ff:ff:ff:ff:ff link-netns iot-cloud
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -6 -M do -s 1400 -c 2 2001:db8:2::2
+PING 2001:db8:2::2 (2001:db8:2::2) 1400 data bytes
+From 2001:db8:1::1 icmp_seq=1 Packet too big: mtu=1280
+ping: local error: message too long, mtu: 1280
+
+--- 2001:db8:2::2 ping statistics ---
+2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 1060ms
+
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -6 -M do -s 1232 -c 2 2001:db8:2::2
+PING 2001:db8:2::2 (2001:db8:2::2) 1232 data bytes
+1240 bytes from 2001:db8:2::2: icmp_seq=1 ttl=63 time=0.382 ms
+1240 bytes from 2001:db8:2::2: icmp_seq=2 ttl=63 time=0.051 ms
+
+--- 2001:db8:2::2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1028ms
+rtt min/avg/max/mdev = 0.051/0.216/0.382/0.165 ms
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -4 -M do -s 1400 -c 2 10.10.2.2
+PING 10.10.2.2 (10.10.2.2) 1400(1428) bytes of data.
+From 10.10.1.1 icmp_seq=1 Frag needed and DF set (mtu = 1280)
+ping: local error: message too long, mtu=1280
+
+--- 10.10.2.2 ping statistics ---
+2 packets transmitted, 0 received, +2 errors, 100% packet loss, time 1004ms
+
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-sensor ping -4 -M do -s 1252 -c 2 10.10.2.2
+PING 10.10.2.2 (10.10.2.2) 1252(1280) bytes of data.
+1260 bytes from 10.10.2.2: icmp_seq=1 ttl=63 time=0.048 ms
+1260 bytes from 10.10.2.2: icmp_seq=2 ttl=63 time=0.074 ms
+
+--- 10.10.2.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1032ms
+rtt min/avg/max/mdev = 0.048/0.061/0.074/0.013 ms

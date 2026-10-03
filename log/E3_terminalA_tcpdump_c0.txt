@@ -1,0 +1,29 @@
+samcode@samcode:~/network_layer$ sudo ip netns exec iot-cloud tcpdump -i c0 -nn 'icmp or icmp6'
+[sudo] password for samcode:
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on c0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+^C13:03:20.826638 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3478, seq 1, length 64
+13:03:21.832506 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3478, seq 2, length 64
+13:03:22.856563 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3478, seq 3, length 64
+13:03:29.998877 IP6 2001:db8:1::2 > 2001:db8:2::2: ICMP6, echo request, id 3482, seq 1, length 64
+13:03:29.998926 IP6 2001:db8:2::2 > 2001:db8:1::2: ICMP6, echo reply, id 3482, seq 1, length 64
+13:03:31.048507 IP6 2001:db8:1::2 > 2001:db8:2::2: ICMP6, echo request, id 3482, seq 2, length 64
+13:03:31.048520 IP6 2001:db8:2::2 > 2001:db8:1::2: ICMP6, echo reply, id 3482, seq 2, length 64
+13:03:32.072624 IP6 2001:db8:1::2 > 2001:db8:2::2: ICMP6, echo request, id 3482, seq 3, length 64
+13:03:32.072638 IP6 2001:db8:2::2 > 2001:db8:1::2: ICMP6, echo reply, id 3482, seq 3, length 64
+13:03:35.336461 IP6 fe80::d4df:f1ff:fe65:7ea7 > 2001:db8:2::1: ICMP6, neighbor solicitation, who has 2001:db8:2::1, length 32
+13:03:35.336612 IP6 2001:db8:2::1 > fe80::d4df:f1ff:fe65:7ea7: ICMP6, neighbor advertisement, tgt is 2001:db8:2::1, length 24
+13:03:40.456443 IP6 fe80::5caf:5dff:fefb:1398 > fe80::d4df:f1ff:fe65:7ea7: ICMP6, neighbor solicitation, who has fe80::d4df:f1ff:fe65:7ea7, length 32
+13:03:40.456469 IP6 fe80::d4df:f1ff:fe65:7ea7 > fe80::5caf:5dff:fefb:1398: ICMP6, neighbor advertisement, tgt is fe80::d4df:f1ff:fe65:7ea7, length 24
+13:03:45.576344 IP6 fe80::d4df:f1ff:fe65:7ea7 > fe80::5caf:5dff:fefb:1398: ICMP6, neighbor solicitation, who has fe80::5caf:5dff:fefb:1398, length 32
+13:03:45.576389 IP6 fe80::5caf:5dff:fefb:1398 > fe80::d4df:f1ff:fe65:7ea7: ICMP6, neighbor advertisement, tgt is fe80::5caf:5dff:fefb:1398, length 24
+13:03:59.514828 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3488, seq 1, length 64
+13:03:59.514836 IP 10.10.2.2 > 10.10.1.2: ICMP echo reply, id 3488, seq 1, length 64
+13:04:00.552427 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3488, seq 2, length 64
+13:04:00.552439 IP 10.10.2.2 > 10.10.1.2: ICMP echo reply, id 3488, seq 2, length 64
+13:04:01.576464 IP 10.10.1.2 > 10.10.2.2: ICMP echo request, id 3488, seq 3, length 64
+13:04:01.576483 IP 10.10.2.2 > 10.10.1.2: ICMP echo reply, id 3488, seq 3, length 64
+
+21 packets captured
+21 packets received by filter
+0 packets dropped by kernel
