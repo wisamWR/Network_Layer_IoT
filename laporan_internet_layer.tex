@@ -1,0 +1,660 @@
+% !TEX root = laporan_internet_layer.tex
+\documentclass[12pt,a4paper]{report}
+
+% ===================== PAKET =====================
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{listings}
+\usepackage{upquote}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage[section,above,below]{placeins}
+% Gambar boleh bergeser ke halaman berikutnya agar sisa halaman terisi teks
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{14pt}
+\makeatother
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{gambar/}}
+
+% ===================== GAYA JUDUL (BAB I, I.1, ...) =====================
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{1}
+
+\titleformat{\chapter}[display]{\normalfont\normalsize\bfseries\centering}{BAB \thechapter}{10pt}{}
+\titleformat{name=\chapter,numberless}[block]{\normalfont\normalsize\bfseries\centering}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{1.2cm}{8pt}
+\titleformat{\section}{\normalfont\normalsize\bfseries}{\thesection.}{0.4em}{}
+\titlespacing*{\section}{0pt}{10pt}{2pt}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection.}{0.4em}{}
+\titlespacing*{\subsection}{0pt}{8pt}{2pt}
+
+% ===================== DAFTAR ISI =====================
+\renewcommand{\contentsname}{DAFTAR ISI}
+\newcommand{\titiktoc}{\titlerule*[0.42em]{.}}
+\newcommand{\namabab}{BAB}
+\contentsmargin{0pt}
+\titlecontents{chapter}[0pt]{}
+  {\namabab\ \thecontentslabel\titiktoc\thecontentspage\endgraf\noindent}
+  {}
+  {\titiktoc\thecontentspage}
+\titlecontents{section}[1.2em]{}
+  {\thecontentslabel.\enspace}
+  {}
+  {\titiktoc\thecontentspage}
+
+% ===================== GAMBAR, TABEL, LISTING =====================
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
+\renewcommand{\lstlistingname}{Listing}
+\captionsetup{font=normalsize,labelfont=normalfont,labelsep=period,justification=centering,skip=6pt}
+\captionsetup[lstlisting]{justification=raggedright,singlelinecheck=false,skip=4pt}
+
+\definecolor{hijauhdr}{RGB}{226,239,217}
+\definecolor{garistabel}{RGB}{166,166,166}
+\definecolor{latarkode}{RGB}{245,245,245}
+\arrayrulecolor{garistabel}
+\newcommand{\hdr}[1]{\cellcolor{hijauhdr}\textbf{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstdefinestyle{perintah}{
+    backgroundcolor=\color{latarkode},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    breakatwhitespace=false,
+    frame=single,
+    rulecolor=\color{garistabel},
+    numbers=none,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    upquote=true,
+    aboveskip=8pt,
+    belowskip=8pt,
+    xleftmargin=3pt,
+    xrightmargin=3pt
+}
+\lstdefinestyle{keluaran}{style=perintah,basicstyle=\ttfamily\footnotesize}
+\lstdefinestyle{kode}{style=perintah,basicstyle=\ttfamily\footnotesize,numbers=left,
+    numberstyle=\tiny\color{gray},xleftmargin=18pt,framexleftmargin=15pt}
+\lstset{style=perintah}
+% Blok perintah yang tidak terpotong antarhalaman
+\lstnewenvironment{cmd}{\endgraf\nopagebreak\noindent\minipage{\linewidth}\lstset{style=perintah}}{\endminipage\endgraf}
+
+\newcommand{\kode}[1]{\texttt{\small #1}}
+
+% Gambar tangkapan layar dengan caption
+\newcommand{\gambar}[4][1.0]{%
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=#1\textwidth]{#2}
+\caption{#3}
+\label{#4}
+\end{figure}}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{6pt}
+\setstretch{1.15}
+\emergencystretch=3em
+\clubpenalty=10000
+\widowpenalty=10000
+\renewcommand{\arraystretch}{1.35}
+\setlist{topsep=2pt,itemsep=2pt,parsep=0pt}
+
+\begin{document}
+
+% ===================== HALAMAN SAMPUL =====================
+\pagenumbering{Alph}
+\begin{titlepage}
+\centering
+
+\vspace*{0.6cm}
+{\Large\bfseries LAPORAN PRAKTIKUM } \\[6pt]
+{\large Network Layer pada Internet of Things \\ IPv4, IPv6, Routing, Neighbor Discovery, dan Path MTU}
+
+\vspace{1.2cm}
+\includegraphics[width=6.5cm]{logo-ugm.png}
+
+\vspace{1.2cm}
+{\normalsize Internet of Things}
+
+\vspace{2cm}
+\begin{tabular}{ll}
+MUHAMMAD AZKA ZAHRANI & 26/591583/NPA/20037 \\
+MOHAMMAD WISAM WIRAGHINA & 26/591611/NPA/20043
+\end{tabular}
+
+\vfill
+
+{\large\bfseries DEPARTEMEN ILMU KOMPUTER DAN ELEKTRONIKA} \\[2pt]
+{\large\bfseries FAKULTAS MATEMATIKA DAN ILMU PENGETAHUAN ALAM} \\[2pt]
+{\large\bfseries UNIVERSITAS GADJAH MADA} \\[2pt]
+{\large\bfseries YOGYAKARTA} \\[2pt]
+{\large\bfseries 2026} \\[2pt]
+
+\end{titlepage}
+
+% ===================== DAFTAR ISI =====================
+\pagenumbering{roman}
+\assignpagestyle{\chapter}{empty}
+\pagestyle{empty}
+\begingroup
+\setlength{\parskip}{0pt}
+\fontsize{11.5}{15.2}\selectfont
+\tableofcontents
+\endgroup
+\clearpage
+\assignpagestyle{\chapter}{plain}
+\pagestyle{plain}
+\pagenumbering{arabic}
+
+% =====================================================================
+\chapter{PENDAHULUAN}
+
+\section{Tujuan}
+\begin{enumerate}
+    \item membangun topologi terisolasi \emph{sensor}-\emph{router}-\emph{cloud} pada satu mesin Linux;
+    \item mengonfigurasi alamat dan \emph{route} IPv4 serta IPv6;
+    \item menjelaskan \emph{forwarding}, \emph{next hop}, ARP, dan IPv6 \emph{Neighbor Discovery} berdasarkan paket yang tertangkap;
+    \item mendiagnosis kegagalan \emph{route} dan MTU dengan bukti paket.
+\end{enumerate}
+
+\section{Dasar Teori}
+\emph{Internet Protocol} (IP) memindahkan paket antarjaringan. \emph{Subnet prefix} menentukan alamat mana yang berada pada \emph{link} lokal. Sebuah \emph{route} memilih \emph{interface} keluar dan, bila tujuan tidak berada pada \emph{link} lokal, sebuah \emph{next hop}. \emph{Router} meneruskan paket dari satu \emph{link} ke \emph{link} lain; fungsi \emph{forwarding} ini harus diaktifkan tersendiri dan tidak otomatis menyala hanya karena \emph{interface} diberi alamat.
+
+Untuk mengirim paket IP ke \emph{next hop}, pengirim membutuhkan alamat \emph{link-layer} (MAC) milik \emph{next hop} tersebut. Pada IPv4 pemetaan ini dilakukan oleh ARP \cite{rfc826}. IPv6 tidak memakai ARP, tetapi pesan ICMPv6 \emph{Neighbor Solicitation} dan \emph{Neighbor Advertisement} yang merupakan bagian dari \emph{Neighbor Discovery} \cite{rfc4861}.
+
+Setiap paket membawa \emph{hop limit} (pada IPv4 disebut TTL) yang dikurangi satu oleh setiap \emph{router}. Paket yang nilainya habis dibuang dan pengirim menerima pesan \emph{Time Exceeded}, sehingga paket tidak dapat berputar selamanya.
+
+MTU adalah ukuran paket IP terbesar yang dapat dibawa sebuah \emph{link} tanpa fragmentasi IP. \emph{Path MTU} adalah MTU terkecil di sepanjang jalur. \emph{Router} IPv6 tidak memfragmentasi paket yang diteruskannya; paket yang terlalu besar dibuang dan pengirim diberi tahu lewat pesan ICMPv6 \emph{Packet Too Big} \cite{rfc8200,rfc8201}.
+
+Percobaan memakai \emph{network namespace} Linux, yaitu salinan \emph{network stack} yang memiliki \emph{interface}, alamat, \emph{route}, dan \emph{neighbor cache} sendiri \cite{ipnetns}. Dua \emph{namespace} dihubungkan dengan pasangan \emph{veth}, yaitu dua \emph{interface} Ethernet virtual yang saling tersambung. Dengan cara ini tiga \emph{node} dapat dibuat pada satu mesin virtual tanpa perangkat tambahan.
+
+\section{Topologi Percobaan}
+Topologi terdiri atas tiga \emph{namespace}. \emph{Namespace} \kode{iot-cloud} adalah kolektor lokal, bukan layanan \emph{cloud} sungguhan. \emph{Router} memiliki dua \emph{interface} karena menghubungkan dua \emph{subnet} yang berbeda.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=3.3cm,
+    simpul/.style={draw=black!70, fill=hijauhdr, rounded corners=2pt, minimum width=2.6cm, minimum height=1.1cm, font=\small\bfseries},
+    ket/.style={font=\scriptsize, align=center},
+    antarmuka/.style={font=\scriptsize\ttfamily}]
+\node[simpul] (s) {iot-sensor};
+\node[simpul, right=of s] (r) {iot-router};
+\node[simpul, right=of r] (c) {iot-cloud};
+\draw[thick] (s) -- node[above, ket] {10.10.1.0/24\\2001:db8:1::/64} node[below, ket] {MTU 1500} (r);
+\draw[thick] (r) -- node[above, ket] {10.10.2.0/24\\2001:db8:2::/64} node[below, ket] {MTU 1500\\(1280 pada Eksperimen 4)} (c);
+\node[antarmuka, below=1pt of s.south east, anchor=north east] {s0};
+\node[antarmuka, below=1pt of r.south west, anchor=north west] {r0};
+\node[antarmuka, below=1pt of r.south east, anchor=north east] {r1};
+\node[antarmuka, below=1pt of c.south west, anchor=north west] {c0};
+\end{tikzpicture}
+\caption{Topologi \emph{sensor}-\emph{router}-\emph{cloud}.}
+\label{fig:topologi}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|L{3cm}|L{2.2cm}|L{3.2cm}|L{4cm}|}
+\hline
+\hdr{Namespace} & \hdr{Interface} & \hdr{IPv4} & \hdr{IPv6} \\ \hline
+iot-sensor & s0 & 10.10.1.2/24 & 2001:db8:1::2/64 \\ \hline
+iot-router & r0 & 10.10.1.1/24 & 2001:db8:1::1/64 \\ \hline
+iot-router & r1 & 10.10.2.1/24 & 2001:db8:2::1/64 \\ \hline
+iot-cloud & c0 & 10.10.2.2/24 & 2001:db8:2::2/64 \\ \hline
+\end{tabular}
+\caption{Rencana pengalamatan.}
+\label{tab:alamat}
+\end{table}
+
+Alamat IPv6 dari blok 2001:db8::/32 dicadangkan untuk dokumentasi dan hanya dipakai di dalam lab terisolasi ini. \emph{Route} statis dipasang secara eksplisit di kedua arah. Tidak ada NAT, DHCP, \emph{router advertisement}, DNS, maupun \emph{route} ke Internet.
+
+% =====================================================================
+\chapter{LINGKUNGAN DAN PERSIAPAN}
+
+\section{Lingkungan Eksekusi}
+Seluruh percobaan dijalankan pada satu mesin virtual Ubuntu. Perintah diketik melalui dua sesi SSH dari Windows ke mesin virtual yang sama: Terminal~A untuk \emph{capture} paket dan server, Terminal~B untuk perintah lainnya.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|L{4.2cm}|L{9.6cm}|}
+\hline
+\hdr{Komponen} & \hdr{Nilai} \\ \hline
+Hypervisor & VMware, jaringan NAT \\ \hline
+Sistem operasi tamu & Ubuntu 24.04.5 LTS \\ \hline
+iproute2 & 6.1.0 (libbpf 1.3.0) \\ \hline
+Python & 3.12.3 \\ \hline
+Alat lain & \kode{iputils-ping}, \kode{tcpdump} \\ \hline
+Akses & SSH (OpenSSH) dari PowerShell Windows, dua sesi \\ \hline
+Tanggal pelaksanaan & 3 Oktober 2026 \\ \hline
+\end{tabular}
+\caption{Lingkungan eksekusi.}
+\label{tab:lingkungan}
+\end{table}
+
+\section{Instalasi Alat}
+Paket yang dibutuhkan dipasang dari repositori Ubuntu. Koneksi Internet hanya diperlukan pada tahap ini; lalu lintas percobaan tidak keluar dari mesin virtual.
+
+\begin{cmd}
+sudo apt update
+sudo apt install -y iproute2 iputils-ping tcpdump python3
+ip -V
+\end{cmd}
+
+\gambar[0.6]{E0-01_instalasi-tools.png}{Versi \kode{iproute2} dan sistem operasi.}{fig:e0}
+
+\section{Script Pembangun Topologi}
+Topologi dibangun oleh \kode{network\_lab.sh} dari tutorial. Salinan yang dipakai identik dengan lampiran tutorial dan tersedia lengkap pada repositori GitHub \url{https://github.com/wisamWR/Network_Layer_IoT.git}. Berkas dipindahkan dari Windows ke mesin virtual dengan \kode{scp}. Bagian inti \emph{script} adalah sebagai berikut.
+
+\lstinputlisting[style=kode,firstnumber=36,linerange={36-59},caption={Bagian inti \kode{code/network\_lab.sh}.},label={lst:inti}]{code/network_lab.sh}
+
+\enlargethispage{\baselineskip}
+Urutan kerjanya:
+\begin{enumerate}
+    \item membuat tiga \emph{namespace} dan mengaktifkan \emph{loopback} (baris 36-39);
+    \item membuat dua pasangan \emph{veth}: \kode{s0}-\kode{r0} dan \kode{r1}-\kode{c0} (baris 40-41);
+    \item memberi alamat IPv4 dan IPv6 (baris 42-49). Opsi \kode{nodad} melewati \emph{Duplicate Address Detection} karena alamat lab ini tetap, unik, dan terisolasi; jaringan sungguhan tetap memerlukan DAD;
+    \item mengaktifkan \emph{interface} (baris 50-53);
+    \item menyalakan \emph{forwarding} IPv4 dan IPv6 hanya di dalam \emph{namespace} \emph{router} (baris 54-55);
+    \item memasang \emph{route} statis arah pergi dan arah pulang untuk kedua versi IP (baris 56-59).
+\end{enumerate}
+
+Bila salah satu langkah gagal, \kode{trap remove\_lab ERR} pada baris 35 menghapus \emph{namespace} yang sudah telanjur dibuat. \emph{Script} hanya menyentuh tiga \emph{namespace} miliknya sendiri.
+
+% =====================================================================
+\chapter{PELAKSANAAN DAN HASIL}
+
+Setiap eksperimen disajikan dengan urutan yang sama: perintah, hasil, lalu pembahasan. Keluaran teks lengkap setiap terminal tersedia pada folder \kode{log/} di repositori tersebut. Kotak merah bernomor pada tangkapan layar \kode{tcpdump} adalah anotasi yang ditambahkan setelah percobaan; isi tangkapan layarnya tidak diubah.
+
+\section{Eksperimen 1: Membangun dan Memeriksa Topologi}
+
+\subsection{Perintah}
+\begin{cmd}
+sudo bash network_lab.sh up
+sudo ip netns list
+sudo ip -n iot-sensor -br addr
+sudo ip -n iot-router -br addr
+sudo ip -n iot-cloud -br addr
+sudo ip -n iot-sensor route
+sudo ip -n iot-sensor -6 route
+sudo ip netns exec iot-sensor ping -c 3 10.10.1.1
+sudo ip netns exec iot-sensor ping -c 3 10.10.2.2
+sudo ip netns exec iot-sensor ping -6 -c 3 2001:db8:2::2
+sudo ip -n iot-sensor route get 10.10.2.2
+sudo ip -n iot-sensor -6 route get 2001:db8:2::2
+\end{cmd}
+
+\subsection{Hasil}
+\gambar[0.8]{E1-01_lab-up-netns-list.png}{\emph{Script} melaporkan \kode{READY} dan tiga \emph{namespace} terbentuk.}{fig:e1-up}
+
+\gambar{E1-02_alamat-3-namespace.png}{Alamat pada ketiga \emph{namespace}, sesuai Tabel~\ref{tab:alamat}.}{fig:e1-addr}
+
+\gambar[0.85]{E1-03_route-sensor-v4-v6.png}{Tabel \emph{route} IPv4 dan IPv6 pada \emph{sensor}.}{fig:e1-route}
+
+\gambar[0.82]{E1-04_ping-baseline.png}{\emph{Ping} ke \emph{next hop} lokal, lalu ke \emph{cloud} lewat IPv4 dan IPv6.}{fig:e1-ping}
+
+\gambar{E1-05_route-get.png}{Hasil \emph{route lookup} untuk tujuan \emph{cloud}.}{fig:e1-get}
+
+\subsection{Pembahasan}
+Alamat pada Gambar~\ref{fig:e1-addr} sama dengan rencana pada Tabel~\ref{tab:alamat}. Alamat tambahan berawalan \kode{fe80::} adalah alamat \emph{link-local} yang dibuat otomatis dan hanya berlaku pada satu \emph{link}.
+
+\emph{Checkpoint} tutorial terpenuhi. Kedua \emph{ping} ke \emph{cloud} berhasil tanpa \emph{packet loss} (Gambar~\ref{fig:e1-ping}), dan \emph{route lookup} memilih \kode{s0} dengan \emph{next hop} alamat \emph{router} di sisi \emph{sensor} (Gambar~\ref{fig:e1-get}):
+
+\begin{lstlisting}[style=keluaran]
+10.10.2.2 via 10.10.1.1 dev s0 src 10.10.1.2 uid 0
+2001:db8:2::2 from :: via 2001:db8:1::1 dev s0 src 2001:db8:1::2 metric 1024 pref medium
+\end{lstlisting}
+
+Balasan dari \kode{10.10.1.1} tiba dengan \kode{ttl=64}, sedangkan balasan dari \kode{10.10.2.2} tiba dengan \kode{ttl=63}. Selisih satu ini menunjukkan bahwa balasan dari \emph{cloud} melewati satu \emph{router}.
+
+\textbf{Mengapa \emph{sensor} tidak melakukan ARP untuk 10.10.2.2?} ARP hanya berlaku untuk alamat pada \emph{link} yang sama. Alamat \kode{10.10.2.2} berada di luar \emph{subnet} \kode{10.10.1.0/24} milik \kode{s0}, sehingga \emph{sensor} mencari \emph{route}, menemukan \kode{10.10.2.0/24 via 10.10.1.1}, lalu melakukan ARP untuk \emph{next hop} \kode{10.10.1.1}. Hal ini terbukti pada Eksperimen~2.
+
+\textbf{\emph{Interface} mana yang menerima dan meneruskan?} \emph{Request} dari \emph{sensor} diterima \emph{router} pada \kode{r0}, yang se-\emph{link} dengan \kode{s0}, lalu diteruskan keluar lewat \kode{r1} menuju \kode{c0}.
+
+\section{Eksperimen 2: ARP dan IPv6 Neighbor Discovery}
+
+\subsection{Perintah}
+Terminal A menangkap paket pada \emph{interface} \emph{sensor}:
+\begin{cmd}
+sudo ip netns exec iot-sensor tcpdump -i s0 -nn -e -vv 'arp or icmp6'
+\end{cmd}
+
+Terminal B mengosongkan \emph{neighbor cache} milik \emph{namespace} \emph{sensor} saja, lalu mengulang kedua \emph{ping}:
+\begin{cmd}
+sudo ip -n iot-sensor neigh flush dev s0
+sudo ip -n iot-sensor -6 neigh flush dev s0
+sudo ip netns exec iot-sensor ping -c 2 10.10.2.2
+sudo ip netns exec iot-sensor ping -6 -c 2 2001:db8:2::2
+sudo ip -n iot-sensor neigh show
+sudo ip -n iot-sensor -6 neigh show
+\end{cmd}
+
+\subsection{Hasil}
+Pasangan ARP \emph{request} dan \emph{reply} dikutip dari log Terminal~A karena tangkapan layar pada Gambar~\ref{fig:e2-arp} baru dimulai dari baris \emph{reply}.
+
+\lstinputlisting[style=keluaran,linerange={3-4},caption={ARP \emph{request} dan \emph{reply} (\kode{log/E2\_terminalA\_tcpdump.txt}, baris 3-4).},label={lst:arp}]{log/E2_terminalA_tcpdump.txt}
+
+Awalan \kode{\textasciicircum C} pada baris pertama muncul karena \kode{tcpdump} baru menuliskan isi \emph{buffer}-nya ke layar ketika dihentikan dengan Ctrl+C.
+
+\gambar{E2-01_tcpdump-arp_anotasi.png}{\emph{Capture} ARP pada \kode{s0}. Kotak~1: \emph{reply} dari \emph{router} untuk 10.10.1.1.}{fig:e2-arp}
+
+\gambar[0.97]{E2-02_tcpdump-ndp_anotasi.png}{\emph{Capture} ICMPv6 pada \kode{s0}. Kotak~1: \emph{Neighbor Solicitation}. Kotak~2: \emph{Neighbor Advertisement}. Kotak~3 dan~4: \emph{echo request} dan \emph{echo reply}.}{fig:e2-ndp}
+
+\gambar[0.97]{E2-03_flush-ping-neigh.png}{\emph{Ping} ulang dan isi \emph{neighbor cache} pada \emph{sensor}.}{fig:e2-neigh}
+
+\subsection{Pembahasan}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|L{3cm}|L{4.2cm}|L{6.4cm}|}
+\hline
+\hdr{Interface} & \hdr{Alamat MAC} & \hdr{Sumber} \\ \hline
+s0 (\emph{sensor}) & 76:20:9e:81:b3:af & Pengirim ARP \emph{request} (Listing~\ref{lst:arp}) \\ \hline
+r0 (\emph{router}) & 76:68:48:43:f7:cd & ARP \emph{reply} dan \kode{neigh show} \\ \hline
+\end{tabular}
+\caption{Alamat \emph{link-layer} yang teramati pada \emph{link} pertama.}
+\label{tab:mac}
+\end{table}
+
+\textbf{ARP.} \emph{Sensor} mengirim ARP \emph{request} ke alamat \emph{broadcast} untuk menanyakan pemilik alamat \kode{10.10.1.1}. \emph{Router} menjawab langsung ke MAC \emph{sensor} bahwa alamat tersebut berada pada \kode{76:68:48:43:f7:cd} (Listing~\ref{lst:arp}). Alamat yang ditanyakan adalah \kode{10.10.1.1}, bukan \kode{10.10.2.2}, padahal perintah yang dijalankan adalah \emph{ping} ke \kode{10.10.2.2}.
+
+\textbf{Neighbor Discovery.} Untuk IPv6 tidak ada paket ARP. \emph{Sensor} mengirim \emph{Neighbor Solicitation} untuk \kode{2001:db8:1::1} ke alamat \emph{multicast} \kode{ff02::1:ff00:1}. \emph{Router} menjawab dengan \emph{Neighbor Advertisement} yang memuat alamat \emph{link-layer} \kode{76:68:48:43:f7:cd} dan \emph{flag} \kode{router}.
+
+\textbf{Next hop yang ter-\emph{resolve} adalah \emph{router}.} Pada kotak~3 Gambar~\ref{fig:e2-ndp}, \emph{echo request} memiliki alamat IP tujuan \kode{2001:db8:2::2} (\emph{cloud}), tetapi alamat MAC tujuannya \kode{76:68:48:43:f7:cd}, yaitu \kode{r0}. Isi \emph{neighbor cache} pada Gambar~\ref{fig:e2-neigh} menguatkan hal ini: hanya alamat \emph{router} yang tercatat, dan tidak ada entri untuk alamat \emph{cloud}. Pada kotak~4, \emph{echo reply} tiba dengan \kode{hlim 63}, turun satu dari nilai awal 64.
+
+Beberapa paket lain ikut tertangkap dan bukan bagian dari \emph{checkpoint}: \emph{router solicitation} ke \kode{ff02::2}, ARP dari arah \emph{router} yang menanyakan \kode{10.10.1.2}, serta pertukaran \emph{Neighbor Solicitation}/\emph{Advertisement} antaralamat \emph{link-local} \kode{fe80::}.
+
+\section{Eksperimen 3: Forwarding dan Return Route yang Hilang}
+
+\subsection{Hop Limit}
+\begin{cmd}
+sudo ip netns exec iot-sensor ping -t 1 -c 2 10.10.2.2
+sudo ip netns exec iot-sensor ping -6 -t 1 -c 2 2001:db8:2::2
+\end{cmd}
+
+\gambar[0.95]{E3-01_hop-limit-1.png}{\emph{Ping} dengan \emph{hop limit} 1 dijawab \emph{Time Exceeded} oleh \emph{router}.}{fig:e3-hop}
+
+Paket dengan \emph{hop limit} 1 tidak dapat menyeberangi \emph{router}. Yang menjawab adalah \emph{router} sendiri, dari alamat \kode{10.10.1.1} dan \kode{2001:db8:1::1}, dengan pesan \kode{Time to live exceeded} (IPv4) dan \kode{Time exceeded: Hop limit} (IPv6).
+
+\subsection{Return Route IPv4 Dihapus}
+Terminal A menangkap paket di sisi \emph{cloud}:
+\begin{cmd}
+sudo ip netns exec iot-cloud tcpdump -i c0 -nn 'icmp or icmp6'
+\end{cmd}
+
+Terminal B menghapus \emph{return route} IPv4 pada \emph{cloud}, menguji, lalu memulihkannya:
+\begin{cmd}
+sudo ip -n iot-cloud route
+sudo ip -n iot-cloud route del 10.10.1.0/24
+sudo ip -n iot-cloud route
+sudo ip netns exec iot-sensor ping -c 3 -W 1 10.10.2.2
+sudo ip netns exec iot-sensor ping -6 -c 3 2001:db8:2::2
+sudo ip -n iot-cloud route add 10.10.1.0/24 via 10.10.2.1
+sudo ip netns exec iot-sensor ping -c 3 10.10.2.2
+\end{cmd}
+
+Tabel \emph{route} \emph{cloud} sebelum dan sesudah penghapusan dikutip dari log Terminal~B:
+\lstinputlisting[style=keluaran,linerange={18-23},caption={Tabel \emph{route} IPv4 pada \emph{cloud} (\kode{log/E3\_terminalB.txt}, baris 18-23).},label={lst:routedel}]{log/E3_terminalB.txt}
+
+\gambar[0.95]{E3-02_return-route-hilang.png}{Setelah \emph{return route} dihapus: IPv4 gagal total, IPv6 tetap berhasil.}{fig:e3-hilang}
+
+\gambar[0.97]{E3-03_tcpdump-c0-tanpa-route_anotasi.png}{\emph{Capture} pada \kode{c0}. Kotak~1: tiga \emph{echo request} IPv4 tanpa \emph{reply}. Kotak~2: IPv6 tetap dijawab. Kotak~3: IPv4 dijawab lagi setelah \emph{route} dipulihkan.}{fig:e3-c0}
+
+\gambar[0.95]{E3-04_return-route-pulih.png}{\emph{Ping} IPv4 kembali berhasil setelah \emph{route} dipulihkan.}{fig:e3-pulih}
+
+Untuk membedakan dua kemungkinan yang disebut tutorial, tabel \emph{route} dan pengaturan \emph{reverse-path filter} pada \emph{cloud} diperiksa dalam keadaan \emph{route} terhapus:\par\nopagebreak
+
+\gambar[0.97]{E3-07_route-get-unreachable.png}{Tanpa \emph{return route}, \emph{cloud} tidak memiliki jalan ke 10.10.1.2; \kode{rp\_filter} bernilai 2.}{fig:e3-rp}
+
+Kotak~1 pada Gambar~\ref{fig:e3-c0} menunjukkan bahwa ketiga \emph{echo request} IPv4 sampai di \kode{c0}. Jalur pergi \emph{sensor}~$\rightarrow$~\emph{router}~$\rightarrow$~\emph{cloud} berfungsi; yang rusak adalah jalur pulang. Gambar~\ref{fig:e3-rp} memperlihatkan dua hal. Pertama, \kode{ip route get 10.10.1.2} menjawab \kode{Network is unreachable}, sehingga \emph{cloud} tidak dapat mengirim balasan. Kedua, \kode{net.ipv4.conf.all.rp\_filter = 2} (mode \emph{loose}). Pada mode ini kernel membuang paket yang alamat sumbernya tidak dapat dicapai lewat \emph{interface} mana pun \cite{ipsysctl}. Pengamatan ini konsisten dengan \emph{request} yang dibuang di penerima oleh \emph{reverse-path filter}; \emph{counter} kernel tidak diambil, sehingga hal tersebut tidak dibuktikan secara langsung. Pada kedua kemungkinan, hasil yang terlihat dari \emph{sensor} sama: tidak ada balasan.
+
+IPv6 tidak terpengaruh karena \emph{route} IPv6 pada \emph{cloud}, yaitu \kode{2001:db8:1::/64} lewat \kode{2001:db8:2::1}, tidak disentuh.
+
+\subsection{Forwarding pada Router Dimatikan}
+\begin{cmd}
+sudo ip netns exec iot-router sysctl -w net.ipv4.ip_forward=0
+sudo ip netns exec iot-sensor ping -c 2 -W 1 10.10.2.2
+sudo ip netns exec iot-router sysctl -w net.ipv4.ip_forward=1
+sudo ip netns exec iot-sensor ping -c 2 10.10.2.2
+\end{cmd}
+
+\gambar[0.95]{E3-05_forwarding-mati.png}{\emph{Forwarding} IPv4 dimatikan: \emph{ping} gagal total.}{fig:e3-fwd0}
+
+\gambar[0.95]{E3-06_forwarding-pulih.png}{\emph{Forwarding} dinyalakan kembali: \emph{ping} berhasil.}{fig:e3-fwd1}
+
+Dengan \kode{ip\_forward = 0}, \emph{router} tetap memiliki alamat dan \emph{route} yang benar, tetapi tidak meneruskan paket dari \kode{r0} ke \kode{r1}. Paket dibuang tanpa pesan galat, sehingga \emph{ping} hanya mengalami \emph{timeout}. Perubahan \kode{sysctl} dilakukan di dalam \emph{namespace} \emph{router} saja; pengaturan \emph{host} tidak diubah.
+
+\subsection{Pembahasan}
+\textbf{Mengapa alamat \emph{endpoint} yang benar saja tidak cukup?} Pada kedua gangguan, alamat \emph{sensor} dan \emph{cloud} tidak berubah, tetapi komunikasi gagal. Komunikasi dua arah membutuhkan tiga hal sekaligus: \emph{route} ke tujuan pada pengirim, \emph{route} kembali ke pengirim pada penerima, dan \emph{forwarding} yang aktif pada setiap \emph{router} di jalur. Balasan adalah paket baru yang di-\emph{route} secara mandiri oleh \emph{cloud}; tanpa \emph{return route}, \emph{request} dapat sampai tetapi tidak pernah dijawab.
+
+\textbf{Bukti pemulihan.} Setelah \emph{return route} dipasang kembali, \emph{ping} berhasil (Gambar~\ref{fig:e3-pulih}) dan pasangan \emph{request}/\emph{reply} terlihat lagi pada \kode{c0} (kotak~3 Gambar~\ref{fig:e3-c0}). Setelah \emph{forwarding} dinyalakan kembali, \emph{ping} berhasil (Gambar~\ref{fig:e3-fwd1}).
+
+\section{Eksperimen 4: Path MTU yang Terbatas}
+
+\subsection{Perintah}
+MTU \emph{link} kedua diturunkan menjadi 1280 byte, sedangkan \emph{link} \emph{sensor} tetap 1500 byte:
+\begin{cmd}
+sudo ip -n iot-router link set r1 mtu 1280
+sudo ip -n iot-cloud link set c0 mtu 1280
+sudo ip -n iot-router link show r1
+\end{cmd}
+
+Terminal A mengamati ICMPv6 pada \emph{link} pertama:
+\begin{cmd}
+sudo ip netns exec iot-sensor tcpdump -i s0 -nn -vv icmp6
+\end{cmd}
+
+Terminal B mengirim empat \emph{probe} dengan larangan fragmentasi (\kode{-M do}):
+\begin{cmd}
+sudo ip netns exec iot-sensor ping -6 -M do -s 1400 -c 2 2001:db8:2::2
+sudo ip netns exec iot-sensor ping -6 -M do -s 1232 -c 2 2001:db8:2::2
+sudo ip netns exec iot-sensor ping -4 -M do -s 1400 -c 2 10.10.2.2
+sudo ip netns exec iot-sensor ping -4 -M do -s 1252 -c 2 10.10.2.2
+\end{cmd}
+
+\subsection{Hasil}
+\gambar{E4-01_set-mtu-1280.png}{MTU \kode{r1} menjadi 1280 byte.}{fig:e4-mtu}
+
+\gambar{E4-02_ping6-1400-gagal.png}{\emph{Probe} IPv6 1400 byte: \emph{Packet too big} dari \emph{router}, lalu galat lokal.}{fig:e4-v6big}
+
+\gambar[0.97]{E4-03_tcpdump-packet-too-big_anotasi.png}{\emph{Capture} ICMPv6 pada \kode{s0}. Kotak~1: \emph{echo request} dengan \emph{payload length} 1408. Kotak~2: \emph{Packet Too Big}, MTU 1280, dari \emph{router}.}{fig:e4-ptb}
+
+\gambar{E4-04_ping6-1232-sukses.png}{\emph{Probe} IPv6 1232 byte berhasil.}{fig:e4-v6ok}
+
+\gambar{E4-05_ping4-1400-gagal.png}{\emph{Probe} IPv4 1400 byte: \emph{Frag needed and DF set}, lalu galat lokal.}{fig:e4-v4big}
+
+\gambar{E4-06_ping4-1252-sukses.png}{\emph{Probe} IPv4 1252 byte berhasil.}{fig:e4-v4ok}
+
+\subsection{Pembahasan}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|L{2.3cm}|L{5.4cm}|L{3.2cm}|L{2.5cm}|}
+\hline
+\hdr{Probe} & \hdr{Ukuran paket IP} & \hdr{Terhadap 1280 byte} & \hdr{Hasil} \\ \hline
+IPv6, 1400 & $1400 + 8 + 40 = 1448$ byte & Melebihi & Gagal \\ \hline
+IPv6, 1232 & $1232 + 8 + 40 = 1280$ byte & Tepat muat & Berhasil \\ \hline
+IPv4, 1400 & $1400 + 8 + 20 = 1428$ byte & Melebihi & Gagal \\ \hline
+IPv4, 1252 & $1252 + 8 + 20 = 1280$ byte & Tepat muat & Berhasil \\ \hline
+\end{tabular}
+\caption{Ukuran paket keempat \emph{probe}: \emph{payload}, 8 byte \emph{header} ICMP/ICMPv6, dan \emph{header} IP (40 byte untuk IPv6, 20 byte untuk IPv4 tanpa opsi).}
+\label{tab:mtu}
+\end{table}
+
+Pada \emph{probe} IPv6 1400 byte, \emph{echo request} pertama keluar dari \emph{sensor} karena MTU \kode{s0} masih 1500 (kotak~1 Gambar~\ref{fig:e4-ptb}, \emph{payload length} $1408 = 1400 + 8$). \emph{Router} tidak dapat meneruskannya ke \kode{r1} yang ber-MTU 1280. Karena \emph{router} IPv6 tidak memfragmentasi paket yang diteruskan, paket dibuang dan \emph{router} mengirim \emph{Packet Too Big} dengan nilai MTU 1280 (kotak~2). Percobaan kedua pada perintah yang sama tidak lagi keluar ke jaringan: \emph{sensor} sudah menyimpan \emph{path MTU} 1280 untuk tujuan tersebut dan menolaknya secara lokal dengan \kode{local error: message too long, mtu: 1280}. Hal ini sesuai dengan catatan tutorial bahwa galat lokal juga merupakan pengamatan yang sah.
+
+IPv4 berperilaku sepadan. Dengan bit \emph{Don't Fragment} menyala, \emph{router} mengirim \kode{Frag needed and DF set (mtu = 1280)} \cite{rfc1191}, dan percobaan berikutnya ditolak lokal.
+
+\subsection{Kaitan dengan IoT Berdaya Rendah}
+IPv6 mewajibkan setiap \emph{link} mampu membawa paket 1280 byte \cite{rfc8200}. Teknologi \emph{link} dengan \emph{frame} lebih kecil memerlukan lapisan adaptasi di bawah IPv6. 6LoWPAN (\emph{IPv6 over Low-Power Wireless Personal Area Networks}) menyediakan kompresi \emph{header} dan fragmentasi untuk \emph{frame} IEEE 802.15.4 yang berukuran paling besar 127 byte \cite{rfc4944}. \emph{Router} pada percobaan ini memperagakan peran \emph{forwarding} sebuah \emph{border router}, tetapi lab berbasis Ethernet virtual ini tidak meniru kompresi 6LoWPAN, \emph{routing} RPL, maupun radio 802.15.4.
+
+\section{Eksperimen 5: Menjangkau Layanan lewat IPv6}
+
+\subsection{Perintah}
+MTU dikembalikan ke 1500 byte, lalu server HTTP dijalankan di dalam \emph{namespace} \emph{cloud} (Terminal~A):
+\begin{cmd}
+sudo ip -n iot-router link set r1 mtu 1500
+sudo ip -n iot-cloud link set c0 mtu 1500
+sudo ip netns exec iot-cloud python3 -m http.server 8000 --bind 2001:db8:2::2
+\end{cmd}
+
+Dari \emph{sensor} (Terminal~B) dibuat koneksi TCP IPv6 tanpa bergantung pada DNS atau \emph{proxy}:
+\begin{cmd}
+sudo ip netns exec iot-sensor python3 - <<'PY'
+import socket
+with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as s:
+    s.settimeout(3)
+    s.connect(("2001:db8:2::2", 8000))
+    s.sendall(b"GET / HTTP/1.0\r\nHost: iot-cloud\r\n\r\n")
+    print(s.recv(4096).decode(errors="replace"))
+PY
+\end{cmd}
+
+\subsection{Hasil}
+\gambar{E5-01_mtu-pulih-1500.png}{MTU \kode{r1} kembali 1500 byte.}{fig:e5-mtu}
+
+\gambar[0.97]{E5-02_http-client-200.png}{Klien pada \emph{sensor} menerima \kode{HTTP/1.0 200 OK}.}{fig:e5-klien}
+
+\gambar{E5-03_http-server-log.png}{Log server pada \emph{cloud} mencatat permintaan dari 2001:db8:1::2.}{fig:e5-server}
+
+\subsection{Pembahasan}
+\emph{Checkpoint} terpenuhi: balasan diawali status \kode{HTTP/1.0 200 OK}. Hanya \emph{header} yang tercetak karena \kode{recv(4096)} dipanggil satu kali dan mengambil potongan data pertama.
+
+\emph{Ping} hanya membuktikan bahwa jalur IP berfungsi. Koneksi TCP ke \emph{port} 8000 yang dijawab dengan status HTTP membuktikan dua hal lain sekaligus: \emph{routing} bekerja untuk lalu lintas TCP di kedua arah, dan sebuah aplikasi benar-benar mendengarkan pada alamat dan \emph{port} tersebut.
+
+Log server mencatat alamat klien \kode{2001:db8:1::2}, yaitu alamat \emph{sensor} sendiri. Alamat IP sumber tidak berubah ketika melewati \emph{router}, sesuai dengan topologi tanpa NAT.
+
+\section{Pembersihan}
+Setelah \emph{capture} dan server dihentikan, lab dihapus:
+\begin{cmd}
+sudo bash network_lab.sh down
+sudo ip netns list
+\end{cmd}
+
+\gambar[0.85]{E7-01_cleanup.png}{Tidak ada \emph{namespace} yang tersisa; hanya \kode{lo} dan \kode{ens33} milik mesin virtual yang ada.}{fig:e7}
+
+% =====================================================================
+\chapter{ANALISIS}
+
+\section{Ringkasan Pengujian}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{|L{1.9cm}|L{2.0cm}|L{3.1cm}|L{2.2cm}|Y|}
+\hline
+\hdr{Uji} & \hdr{Next hop yang diharapkan} & \hdr{Hasil pengamatan} & \hdr{Bukti} & \hdr{Penjelasan} \\ \hline
+\emph{Baseline} IPv4 & 10.10.1.1 (r0) & 0\% \emph{loss}, \kode{ttl=63} & Gambar~\ref{fig:e1-ping}, \ref{fig:e1-get} & \emph{Route} dua arah dan \emph{forwarding} aktif; TTL turun satu di \emph{router}. \\ \hline
+\emph{Baseline} IPv6 & 2001:db8:1::1 (r0) & 0\% \emph{loss}, \kode{ttl=63} & Gambar~\ref{fig:e1-ping}, \ref{fig:e1-get} & Sama seperti IPv4; \emph{hop limit} turun satu. \\ \hline
+\emph{Return route} IPv4 hilang & 10.10.1.1 (r0) & IPv4 100\% \emph{loss}; IPv6 0\% \emph{loss} & Gambar~\ref{fig:e3-hilang}, \ref{fig:e3-c0}, \ref{fig:e3-rp} & \emph{Request} sampai di \kode{c0}, tetapi \emph{cloud} tidak punya \emph{route} ke 10.10.1.0/24. \\ \hline
+\emph{Forwarding} IPv4 mati & 10.10.1.1 (r0) & 100\% \emph{loss}, tanpa pesan galat & Gambar~\ref{fig:e3-fwd0}, \ref{fig:e3-fwd1} & \emph{Router} tidak meneruskan paket antar-\emph{interface}. \\ \hline
+\emph{Hop limit} 1 & 10.10.1.1 dan 2001:db8:1::1 & \emph{Time Exceeded} dari \emph{router} & Gambar~\ref{fig:e3-hop} & Nilai habis di \emph{router}; paket dibuang. \\ \hline
+MTU, IPv6 1400 & 2001:db8:1::1 (r0) & \emph{Packet too big} MTU 1280, lalu galat lokal & Gambar~\ref{fig:e4-v6big}, \ref{fig:e4-ptb} & 1448 byte melebihi 1280; \emph{router} IPv6 tidak memfragmentasi. \\ \hline
+MTU, IPv6 1232 & 2001:db8:1::1 (r0) & 0\% \emph{loss} & Gambar~\ref{fig:e4-v6ok} & $1232 + 8 + 40 = 1280$, tepat muat. \\ \hline
+MTU, IPv4 1400 & 10.10.1.1 (r0) & \emph{Frag needed and DF set}, lalu galat lokal & Gambar~\ref{fig:e4-v4big} & 1428 byte melebihi 1280 dan DF menyala. \\ \hline
+MTU, IPv4 1252 & 10.10.1.1 (r0) & 0\% \emph{loss} & Gambar~\ref{fig:e4-v4ok} & $1252 + 8 + 20 = 1280$, tepat muat. \\ \hline
+\end{tabularx}
+\caption{Ringkasan seluruh pengujian.}
+\label{tab:ringkasan}
+\end{table}
+
+\section{Jawaban Pertanyaan Analisis}
+
+\textbf{1. Alamat mana yang berubah pada setiap \emph{hop}: alamat IP atau alamat \emph{link-layer}?}
+
+Yang berubah adalah alamat \emph{link-layer}. Alamat IP sumber dan tujuan tetap dari ujung ke ujung karena topologi ini tidak memakai NAT. Pada \emph{link} pertama, \emph{echo request} berangkat dengan MAC sumber \kode{76:20:9e:81:b3:af} (\kode{s0}) dan MAC tujuan \kode{76:68:48:43:f7:cd} (\kode{r0}), sedangkan alamat IP sumbernya \kode{2001:db8:1::2} dan alamat IP tujuannya \kode{2001:db8:2::2} (Gambar~\ref{fig:e2-ndp}). \emph{Router} membuang \emph{header} Ethernet tersebut dan membuat yang baru untuk \emph{link} kedua, dengan MAC \kode{r1} sebagai sumber dan MAC \kode{c0} sebagai tujuan. \emph{Frame} pada \emph{link} kedua tidak ditangkap dengan opsi \kode{-e}, sehingga bagian ini mengikuti cara kerja \emph{forwarding} dan tidak diamati langsung. Yang teramati langsung adalah alamat IP yang tidak berubah: \emph{capture} pada \kode{c0} menunjukkan sumber \kode{10.10.1.2} (Gambar~\ref{fig:e3-c0}), dan server mencatat klien \kode{2001:db8:1::2} (Gambar~\ref{fig:e5-server}). Selain alamat \emph{link-layer}, \emph{router} juga mengurangi TTL atau \emph{hop limit} sebesar satu.
+
+\textbf{2. Mengapa \emph{cloud} harus mengetahui \emph{route} kembali ke \emph{sensor}?}
+
+Balasan bukan paket yang ``dipantulkan'', melainkan paket baru dengan tujuan alamat \emph{sensor}, dan \emph{cloud} menentukan jalurnya dari tabel \emph{route} miliknya sendiri. Alamat \kode{10.10.1.2} tidak berada pada \emph{subnet} \kode{c0}, sehingga \emph{cloud} membutuhkan \emph{route} \kode{10.10.1.0/24 via 10.10.2.1}. Ketika \emph{route} itu dihapus, \emph{request} tetap sampai tetapi tidak ada balasan, dan \kode{ip route get} menjawab \kode{Network is unreachable} (Gambar~\ref{fig:e3-c0} dan~\ref{fig:e3-rp}).
+
+\textbf{3. Mengapa memblokir seluruh ICMPv6 merusak lebih dari sekadar \emph{ping}?}
+
+ICMPv6 membawa fungsi yang diperlukan agar IPv6 dapat bekerja \cite{rfc4890}:
+\begin{itemize}
+    \item \emph{Neighbor Discovery}. Tanpa \emph{Neighbor Solicitation} dan \emph{Advertisement}, sebuah \emph{node} tidak dapat memperoleh alamat MAC \emph{next hop}, sehingga tidak ada paket IPv6 yang dapat dikirim sama sekali (Gambar~\ref{fig:e2-ndp}).
+    \item \emph{Path MTU Discovery}. Tanpa \emph{Packet Too Big}, pengirim tidak pernah tahu bahwa paketnya terlalu besar. Paket besar hilang tanpa kabar, sedangkan paket kecil tetap lewat, sehingga gangguannya sulit didiagnosis (Gambar~\ref{fig:e4-ptb}).
+    \item Pesan galat seperti \emph{Time Exceeded} dan \emph{Destination Unreachable}, serta \emph{Router Solicitation}/\emph{Advertisement} yang dipakai untuk konfigurasi alamat otomatis.
+\end{itemize}
+
+\textbf{4. Berapa \emph{payload} UDP terbesar yang muat dalam paket IPv6 1280 byte tanpa \emph{extension header}?}
+
+\[
+1280 - 40\ (\text{\emph{header} IPv6}) - 8\ (\text{\emph{header} UDP}) = 1232\ \text{byte}.
+\]
+
+Asumsinya: tidak ada \emph{extension header}, paket tidak difragmentasi, 1280 byte adalah ukuran seluruh paket IP dan tidak mencakup \emph{header} \emph{link-layer}, serta \emph{path MTU} sekurang-kurangnya 1280 byte. Angka ini sama dengan \emph{probe} \kode{-s 1232} pada Eksperimen~4 karena \emph{header} ICMPv6 juga berukuran 8 byte.
+
+\textbf{5. Apa beda MTU Ethernet, ukuran \emph{frame} radio, dan fragmentasi lapisan adaptasi 6LoWPAN?}
+
+\begin{itemize}
+    \item \emph{MTU Ethernet} (umumnya 1500 byte) adalah ukuran paket IP terbesar yang dibawa satu \emph{frame} Ethernet. Nilai ini terlihat oleh lapisan IP dan menentukan kapan fragmentasi IP atau \emph{Packet Too Big} terjadi.
+    \item \emph{Ukuran frame radio} adalah batas lapisan fisik dan \emph{link}. Pada IEEE 802.15.4 nilainya 127 byte, dan setelah dikurangi \emph{header} MAC tersisa paling banyak 102 byte, atau 81 byte bila keamanan \emph{link-layer} dipakai \cite{rfc4944}. Angka 127 byte bukan MTU IPv6, karena IPv6 mewajibkan MTU minimal 1280 byte.
+    \item \emph{Fragmentasi 6LoWPAN} terjadi di lapisan adaptasi, di bawah IPv6. Lapisan ini memecah satu paket IPv6 menjadi beberapa \emph{frame} radio dan menyusunnya kembali, serta mengompresi \emph{header}. Lapisan IPv6 tetap melihat \emph{link} dengan MTU 1280 byte. Berbeda dengan fragmentasi IP, proses ini tidak terlihat oleh lapisan IP.
+\end{itemize}
+
+
+% =====================================================================
+\chapter{KESIMPULAN}
+
+\begin{enumerate}
+    \item Topologi \emph{dual-stack} \emph{sensor}-\emph{router}-\emph{cloud} berhasil dibangun dengan \emph{network namespace} dan \emph{veth}. \emph{Sensor} menjangkau \emph{cloud} lewat IPv4 dan IPv6 melalui \emph{next hop} \kode{10.10.1.1} dan \kode{2001:db8:1::1}.
+    \item ARP dan \emph{Neighbor Discovery} hanya me-\emph{resolve} alamat \emph{link-layer} milik \emph{next hop}. Alamat IP tujuan tetap alamat \emph{cloud}, sedangkan alamat MAC tujuan adalah alamat \emph{router}.
+    \item Alamat yang benar tidak menjamin konektivitas. Hilangnya \emph{return route} atau matinya \emph{forwarding} menghasilkan \emph{packet loss} 100\%, dan konektivitas pulih begitu keduanya dikembalikan.
+    \item \emph{Hop limit} membatasi umur paket: paket dengan nilai 1 dibuang \emph{router} dan dijawab \emph{Time Exceeded}.
+    \item Pada \emph{path MTU} 1280 byte, paket 1448 byte (IPv6) dan 1428 byte (IPv4 dengan DF) ditolak, sedangkan paket tepat 1280 byte lewat. \emph{Router} IPv6 tidak memfragmentasi dan mengandalkan \emph{Packet Too Big}.
+    \item Layanan HTTP pada \emph{cloud} dapat dijangkau lewat IPv6 dengan status 200, dan alamat IP sumber tetap alamat \emph{sensor} karena tidak ada NAT.
+    \item Untuk IoT berdaya rendah, batas MTU minimal IPv6 sebesar 1280 byte menjelaskan mengapa \emph{link} dengan \emph{frame} kecil seperti IEEE 802.15.4 memerlukan lapisan adaptasi 6LoWPAN.
+\end{enumerate}
+
+% =====================================================================
+\renewcommand{\bibname}{DAFTAR PUSTAKA}
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+\bibitem{ipnetns} iproute2, ``ip-netns(8) - process network namespace management,'' Linux manual page. \url{https://man7.org/linux/man-pages/man8/ip-netns.8.html}
+\bibitem{rfc8200} S. Deering dan R. Hinden, ``Internet Protocol, Version 6 (IPv6) Specification,'' RFC 8200, IETF, 2017. \url{https://www.rfc-editor.org/rfc/rfc8200.html}
+\bibitem{rfc8201} J. McCann, S. Deering, J. Mogul, dan R. Hinden (Ed.), ``Path MTU Discovery for IP version 6,'' RFC 8201, IETF, 2017. \url{https://www.rfc-editor.org/info/rfc8201}
+\bibitem{rfc4861} T. Narten, E. Nordmark, W. Simpson, dan H. Soliman, ``Neighbor Discovery for IP version 6 (IPv6),'' RFC 4861, IETF, 2007. \url{https://www.rfc-editor.org/info/rfc4861}
+\bibitem{rfc4944} G. Montenegro, N. Kushalnagar, J. Hui, dan D. Culler, ``Transmission of IPv6 Packets over IEEE 802.15.4 Networks,'' RFC 4944, IETF, 2007. \url{https://www.rfc-editor.org/info/rfc4944}
+\bibitem{rfc826} D. Plummer, ``An Ethernet Address Resolution Protocol,'' RFC 826, IETF, 1982. \url{https://www.rfc-editor.org/info/rfc826}
+\bibitem{rfc1191} J. Mogul dan S. Deering, ``Path MTU Discovery,'' RFC 1191, IETF, 1990. \url{https://www.rfc-editor.org/info/rfc1191}
+\bibitem{rfc4890} E. Davies dan J. Mohacsi, ``Recommendations for Filtering ICMPv6 Messages in Firewalls,'' RFC 4890, IETF, 2007. \url{https://www.rfc-editor.org/info/rfc4890}
+\bibitem{ipsysctl} The Linux Kernel documentation, ``IP Sysctl'' (\kode{rp\_filter}). \url{https://docs.kernel.org/networking/ip-sysctl.html}
+\end{thebibliography}
+
+% =====================================================================
+
+\end{document}
